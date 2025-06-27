@@ -1,4 +1,10 @@
 {
+  "compilerOptions": {
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
+  },
   "files": [],
   "references": [
     { "path": "./tsconfig.app.json" },

@@ -1,14 +1,22 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 // import the search icon from react-icons (Feather pack)
-import { FiSearch } from 'react-icons/fi';
 import '../styles/Navbar.css';
+import { getCurrentUser } from '../Authentication/authService';
+import SignInButton from './SignInButton';  
+
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileView, setIsMobileView] = useState(window.innerWidth < 768);
   const location = useLocation();
+  const [, setUser] = useState<unknown>(null);
+
+  useEffect(() => {
+    getCurrentUser().then(setUser);
+  }, []);
+
 
   // Update mobile view state on resize
   useEffect(() => {
@@ -64,6 +72,12 @@ export default function Navbar() {
 
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
+  // Handle auth state changes from SignInButton
+  const handleAuthStateChange = (newUser: unknown) => {
+    setUser(newUser);
+    console.log('Auth state changed:', newUser ? 'Signed in' : 'Signed out');
+  };
+
   return (
     <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
       <div className="navbar-container">
@@ -91,10 +105,12 @@ export default function Navbar() {
         </div>
 
         <div className="navbar-actions">
-          {/* Search Button */}
-          <button className="search-btn" aria-label="Search">
-            <FiSearch size={20} />
-          </button>
+           {/* Sign In/Out Button Component */}
+          <SignInButton 
+            showText={!isMobileView}
+            onAuthStateChange={handleAuthStateChange}
+          />
+
 
           {/* Mobile menu toggle: only on mobile screens */}
           {isMobileView && (
